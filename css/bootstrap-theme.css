@@ -1,0 +1,31 @@
+/*
+    This is the bootstrap theme used by Ormali
+    This is bootstrap 5 compatible and can be used in any of 
+    your bootstrap applications
+*/
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
+.navbar {
+    padding: .2em;
+}
+
+.dropdown-menu {
+    box-shadow: 0em 0em .8em #0000006f;
+}
+
+form[role="search"]>input.form-control {
+    transition: 200ms cubic-bezier(.01, .01, .11, 1.01);
+    display: inline-block;
+}
+
+@media (min-width: 900px) {
+    form[role="search"]>input.form-control:focus {
+        transform: scale(1.06, 1.06) translateX(-1em);
+        width: 20em;
+        translate: -1, 0;
+    }
+
+    form[role="search"]>input.form-control:focus+.content {
+        background-color: #0000003a;
+    }
+}
