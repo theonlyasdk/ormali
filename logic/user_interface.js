@@ -11,15 +11,14 @@ class NewTaskDialog {
         this.field_content = document.getElementById("dialog-new-task-content")
     }
 
-    propogate() {
-
-    }
-
     show() {
         this.dialog_dim_overlay.style.display = "block"
         this.dialog.show()
         this.dialog.classList.remove("dialog-anim-closing")
         this.dialog.classList.add("dialog-anim-opening")
+
+        this.field_content.value = "";
+        this.field_title.value = "";
     }
 
     close() {
