@@ -84,6 +84,7 @@
                 <h3 class="display-4" id="dialog-input-title">...</h3>
                 <button class="btn dialog-btn-close" id="dialog-input-btn-close"><i class="bi bi-x"></i></button>
             </div>
+            <p id="dialog-input-message"></p>
             <form action="#" class="dialog-container" id="dialog-input-form">
                 <input id="dialog-input-textfield" type="text" placeholder="..." name="dialog-new-task-title"
                     class="form-control bg-dark text-white" autocomplete="off">
@@ -114,7 +115,7 @@
                     <button id="dialog-new-task-btn-confirm" class="btn btn-primary" type="button">Create</button>
                     <button id="dialog-new-task-btn-generate-tasks" class="btn btn-secondary btn-content-generating"
                         type="button" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="bs-tooltip"
-                        data-bs-content="Generates appropriate tasks based on the given title for the task using Google Gemini (Requires API key. Set it via the cog icon in the navbar)">
+                        data-bs-content="Generates appropriate content based on the given title for the task using Google Gemini (Requires API key. Set it via the cog icon in the navbar)">
                         <span id="btn-generate-tasks-text">Generate tasks</span> <i class="bi bi-stars"></i>
                     </button>
                 </div>
