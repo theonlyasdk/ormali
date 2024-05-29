@@ -92,18 +92,17 @@ class TaskList {
 
     mark_done(task_id) {
         let task_to_mark_done = this.tasks.find(item => item.id === task_id)
+        let task_done_status = task_to_mark_done.done;
         let task_btn_done = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > a.task-btn-done`)
         let task_btn_done_icon = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > a.task-btn-done > i.bi`)
 
-        task_to_mark_done.done = true
+        // Toggle the 'done' status of the task;
+        task_to_mark_done.done = !task_done_status;
 
-        if (task_btn_done) {
-            task_btn_done.classList.remove("btn-primary")
-            task_btn_done.classList.add("btn-secondary")
-
-            task_btn_done_icon.classList.remove("bi-check")
-            task_btn_done_icon.classList.add("bi-check-all")
-        }
+        task_btn_done.classList.toggle("btn-primary");
+        task_btn_done.classList.toggle("btn-secondary");
+        task_btn_done_icon.classList.toggle("bi-check");
+        task_btn_done_icon.classList.toggle("bi-check-all");
 
         this.save_into_local_storage()
     }
