@@ -13,22 +13,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nanum Gothic Coding:ital,wght@0,400;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap');
 
-/* 
-    Section: Font classes 
-*/
-
-.font-Nanum Gothic Coding-italic {
-    font-family: "Nanum Gothic Coding", monospace;
-    font-weight: 400;
-    font-style: italic;
-}
-
-.font-indie-flower {
-    font-family: "Indie Flower", cursive;
-    font-weight: 400;
-    font-style: normal;
-}
-
 /*
     Section: Animations
 */
@@ -102,11 +86,6 @@
     border: 1px none #ffffff00;
 }
 
-
-/*
-    Section: Media queries
-*/
-
 /*
     Section: :root variables
 */
@@ -123,7 +102,8 @@
     --accent-primary-semi-transparent: #1c8a9097;
     --accent-primary-dim-semi-transparent: #157c8297;
     --accent-bright: #afe5e8;
-    --accent-secondary: #EEEEEE;
+    --accent-secondary: #313131;
+    --accent-secondary-highlight: #434343;
     --text-color: #EEEEEE;
 }
 
@@ -146,7 +126,7 @@ body {
 small,
 span,
 h3 {
-    font-family: "Nanum Gothic Coding", "Inconsolata", monospace;
+    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace; */
 }
 
 .btn-primary {
@@ -154,9 +134,45 @@ h3 {
     background-color: var(--accent-primary-highlight) !important;
     border-color: var(--accent-primary) !important;
 }
+
 .btn-primary:active {
     background-color: var(--accent-primary) !important;
     border-color: var(--accent-primary-highlight) !important;
+}
+
+.btn-secondary {
+    --border-width: 3px;
+    transition: all 50ms ease;
+    background-color: var(--accent-secondary) !important;
+    border-color: var(--accent-primary) !important;
+}
+
+.btn-secondary:active {
+    background-color: var(--accent-secondary-highlight) !important;
+    border-color: var(--accent-primary-highlight) !important;
+}
+
+.btn-content-generating:after {
+    content: '';
+    position: absolute;
+    top: calc(-0.5 * 2px);
+    left: calc(-0.5 * 2px);
+    height: calc(100% + 2px * 1.1);
+    width: calc(100% + 2px * 1);
+    background: linear-gradient(60deg, #34ebff00, var(--accent-primary-highlight), #00c4c4, #b600b6, #da62ff);
+    border-radius: 3px;
+    z-index: -1;
+    animation: border-spin 3s ease alternate infinite;
+    background-size: 300% 300%;
+}
+
+.btn-content-generating {
+    position: relative;
+    border-radius: 2px;
+    background-color: var(--accent-secondary) !important;
+    border: none;
+    margin: 1px;
+    flex: 1;
 }
 
 .dropdown-menu {
@@ -164,12 +180,15 @@ h3 {
     backdrop-filter: blur(3px);
     box-shadow: 0px 2px 6px #00000022;
 }
+
 .dropdown-item:hover {
     background-color: var(--bg-secondary-semi-transparent) !important;
 }
+
 .dropdown-item:active {
     background-color: var(--accent-primary-highlight) !important;
 }
+
 .navbar {
     position: fixed;
     background-color: var(--bg-secondary-semi-transparent) !important;
@@ -187,7 +206,7 @@ h3 {
 }
 
 .body-heading {
-    font-family: "Nanum Gothic Coding", monospace;
+    /* font-family: "Nanum Gothic Coding", monospace; */
     font-weight: bolder;
     user-select: none;
     text-shadow: 3px 3px 2px #282828;
@@ -212,20 +231,6 @@ h3 {
     font-size: 10em;
     margin-bottom: -.1em;
 }
-
-.navbar-nav>li,
-.nav-search,
-.nav-search::placeholder {
-    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
-    font-weight: bolder !important;
-}
-
-.navbar-nav>li:hover {
-    text-decoration: underline dotted;
-    text-underline-offset: .4em;
-    text-decoration-color: var(--bs-secondary);
-}
-
 .card-btn-container {
     display: flex;
     justify-content: right;
@@ -244,7 +249,7 @@ h3 {
     transition: 150ms ease-out;
     margin-bottom: .8em;
     z-index: 0;
-    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
+    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
 }
 
 .task>div>div>a.btn {
@@ -258,9 +263,8 @@ h3 {
 
 .task:hover {
     box-shadow: 0px 5px 14px #00000056;
-    scale: 1.1;
-    transform: translateY(.6em);
-    z-index: 4;
+    scale: 1.01;
+    transform: translateY(-.2em);
 }
 
 .nav-title {
@@ -268,36 +272,39 @@ h3 {
     text-shadow: 2px 1px 3px #00000030;
     text-decoration: none;
     color: var(--accent-bright);
-    font-size: 2.7em;
+    font-size: 3em;
     font-weight: bolder;
     padding: .1em;
     font-family: "Indie Flower", cursive;
     margin-right: .45em;
 }
 
-.nav-search {
-    scale: 0.9;
+.dropdown {
+    display: flex;
 }
+
+
 
 .floating-menu {
     position: fixed;
     bottom: 1.8em;
     right: 2em;
     z-index: 5;
+    font-size: 1.2em;
 }
 
 .floating-btn {
-    box-shadow: 1px 1px 5px #0000006f;
+    box-shadow: 2px 4px 10px #0000006f;
     border-radius: .5em;
     background-color: var(--accent-primary-semi-transparent);
     color: var(--text-color);
     backdrop-filter: blur(10px);
-    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
+    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
     font-weight: bolder !important;
     padding: .5em 1em .5em 1em;
     border: none;
     outline: none;
-    transition: 20ms ease-in;
+    transition: 50ms ease-in;
 }
 
 .floating-btn:hover {
@@ -312,27 +319,55 @@ h3 {
     border: none;
 }
 
-.dialog-new-task-container {
+.popover-body {
+    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    font-size: small;
+    font-weight: bold;
+    line-height: 1.2em;
+}
+
+.dialog {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: none;
+    border-radius: .5em;
+    box-shadow: 0px 4px 7px #00000047;
+    z-index: 10;
+    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    position: fixed;
+    min-width: 40em;
+}
+
+.dialog-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
 
-.dialog-new-task-container>input,
-.dialog-new-task-container>textarea {
+.dialog-container>input,
+.dialog-container>textarea {
     margin-bottom: 1em;
     border-color: var(--bg-secondary);
 }
 
-.dialog-new-task-container>input::placeholder,
-.dialog-new-task-container>textarea::placeholder {
+.dialog-container>input::placeholder,
+.dialog-container>textarea::placeholder {
     color: var(--bs-secondary);
 }
 
-.card-btn-container>a {
-    margin-left: .5em;
+.dialog-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
 }
-
+.dialog-btn-close {
+    color: white;
+    font-size: 3em;
+    height: 100%;
+    margin-bottom: 0.11em;
+}
 .dialog-anim-opening {
     animation: anim-dialog-opening 180ms cubic-bezier(.26, -0.01, 0, 1.33) 1;
 }
@@ -341,20 +376,84 @@ h3 {
     animation: anim-dialog-closing 180ms cubic-bezier(.02, -0.12, 0, 1.19) 1;
 }
 
+.card-btn-container>a {
+    margin-left: .5em;
+}
+
+.card-text {
+    white-space: pre;
+    word-wrap: normal;
+    overflow: scroll;
+}
+
+.card-title {
+    font-size: 1.8em;
+}
+
+.flex-horiz {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-horiz>button {
+    margin: .1em;
+    flex: 1;
+}
+
+.field-search {
+    font-size: 1.2em;
+    flex: 1;
+}
+
+.navbar-nav>li,
+.nav-search,
+.nav-search::placeholder {
+    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    font-weight: bolder !important;
+}
+
+.navbar-nav>li:hover {
+    text-decoration: underline dotted;
+    text-underline-offset: .4em;
+    text-decoration-color: var(--bs-secondary);
+}
+
+.nav-search {
+    margin-right: 1em;
+    display: flex;
+    align-items: center;
+}
+
+.nav-centered {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.nav-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-item {
+    font-size: 1.3em;
+}
+
+.btn-search {
+    height: 90%;
+}
+
+.bs-tooltip {
+    --bs-tooltip-bg: var(--accent-secondary-highlight);
+    --bs-tooltip-color: var(--text-color);  
+}
+
 /*
     Section: ID styling
 */
-
-#dialog-new-task {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border: none;
-    border-radius: .2em;
-    box-shadow: 0px 4px 7px #00000047;
-    z-index: 10;
-    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
-    position: fixed;
-}
 
 #dialog-dim-overlay {
     position: fixed;
@@ -374,5 +473,34 @@ h3 {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    flex-basis: 100%;
+    justify-content: space-around;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+#dialog-new-task-alert-error {
+    overflow: scroll;
+    flex: 1;
+}
+
+/*
+    Section: Media queries
+*/
+@media (max-width: 995px) {
+    .nav-centered {
+        display: block;
+        flex-direction: row;
+        justify-content: left;
+    }
+
+    .nav-search {
+        flex: 1;
+        margin-left: .1em;
+        margin-right: .6em;
+    }
+
+    .dialog {
+        min-width: 20em;
+    }
 }

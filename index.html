@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/bootstrap-theme.css">
     <!-- Put the style.css after Bootstrap css -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations/border-spinning.css">
 </head>
 
 <body>
@@ -36,7 +37,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav nav-centered">
                     <li class="nav-item">
                         <a class="nav-link" href="https://github.com/theonlyasdk/ormali">GitHub</a>
                     </li>
@@ -56,37 +57,80 @@
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex nav-search" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search your tasks..."
-                        aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
-                </form>
+                <div class="nav-right">
+                    <form class="d-flex nav-search" role="search">
+                        <input class="form-control me-2 field-search" type="search" placeholder="Search your tasks..."
+                            aria-label="Search">
+                        <button class="btn btn-outline-success btn-search" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <i class="bi bi-gear-fill"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
+                            <li><a class="dropdown-item" href="#" id="dialog-input-api-key-trigger"><i
+                                        class="bi bi-stars"></i>&nbsp;Set Gemini API Key</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
     <div class="body">
-        <dialog id="dialog-new-task">
-            <h3 class="display-4">Add new task..</h3>
-            <form action="#" class="dialog-new-task-container" id="dialog-new-task-form">
+        <dialog id="dialog-input" class="dialog">
+            <div class="dialog-title">
+                <h3 class="display-4" id="dialog-input-title">...</h3>
+                <button class="btn dialog-btn-close" id="dialog-input-btn-close"><i class="bi bi-x"></i></button>
+            </div>
+            <form action="#" class="dialog-container" id="dialog-input-form">
+                <input id="dialog-input-textfield" type="text" placeholder="..." name="dialog-new-task-title"
+                    class="form-control bg-dark text-white" autocomplete="off">
+                <div class="flex-horiz">
+                    <button id="dialog-input-btn-confirm" class="btn btn-primary" type="button">...</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="dialog-new-task" class="dialog">
+            <div class="dialog-title">
+                <h3 class="display-4">Add new task..</h3>
+                <button class="btn dialog-btn-close" id="dialog-new-task-btn-close"><i class="bi bi-x"></i></button>
+            </div>
+            <form action="#" class="dialog-container" id="dialog-new-task-form">
                 <input id="dialog-new-task-title" type="text" placeholder="Enter title here..."
-                    name="dialog-new-task-title" class="form-control bg-dark text-white">
-                <textarea id="dialog-new-task-content" placeholder="Enter content here..."
-                    class="form-control bg-dark text-white" rows="10">This is some content inside the dialog.</textarea>
-                <button id="dialog-new-task-btn-confirm" class="btn btn-primary" type="button">Create</button>
+                    name="dialog-new-task-title" class="form-control bg-dark text-white" autocomplete="off">
+                <textarea id="dialog-new-task-content" placeholder="Type your tasks here..."
+                    class="form-control bg-dark text-white" rows="10"></textarea>
+                <div class="alert alert-danger" role="alert" id="dialog-new-task-alert-error">
+                    ...
+                </div>
+                <div class="alert alert-warning" role="alert" id="dialog-new-task-alert-warning">
+                    ...
+                </div>
+
+                <div class="flex-horiz">
+                    <button id="dialog-new-task-btn-confirm" class="btn btn-primary" type="button">Create</button>
+                    <button id="dialog-new-task-btn-generate-tasks" class="btn btn-secondary btn-content-generating"
+                        type="button" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="bs-tooltip"
+                        data-bs-content="Generates appropriate tasks based on the given title for the task using Google Gemini (Requires API key. Set it via the cog icon in the navbar)">
+                        <span id="btn-generate-tasks-text">Generate tasks</span> <i class="bi bi-stars"></i>
+                    </button>
+                </div>
             </form>
         </dialog>
 
         <div class="no-tasks" id="no-tasks">
             <i class="bi bi-card-checklist"></i>
-            <h3><b>No tasks!</b></h3>
+            <h3><b>No tasks</b></h3>
             <small>Try adding a task!</small>
         </div>
 
         <br>
         <br>
         <br>
-        
+
         <div id="tasks-container">
 
         </div>
@@ -108,11 +152,27 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
+<script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+      </script>
+<script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
 
+    const API_KEY = localStorage.getItem("ormali.generativeai.gemini.api_key");
+    const gen_ai = new GoogleGenerativeAI(API_KEY)
+
+    // expose GoogleGenerativeAI to global scope
+    window.gen_ai = gen_ai
+</script>
 
 <!-- Some shared code I ise across projects (check out https://github.com/theonlyasdk/libasdk) -->
 <script src="logic/libasdk/logger.js"></script>
 <script src="logic/libasdk/more_apps_loader.js"></script>
+<script src="logic/libasdk/device_check.js"></script>
 
 <script src="logic/tasks.js"></script>
 <script src="logic/user_interface.js"></script>

@@ -13,7 +13,8 @@
     box-shadow: 0em 0em .8em #0000006f;
 }
 
-form[role="search"]>input.form-control {
+/* Uncomment this to make all input type search form-control to expand on focus */
+/* form[role="search"]>input.form-control {
     transition: 200ms cubic-bezier(.01, .01, .11, 1.01);
     display: inline-block;
 }
@@ -28,4 +29,4 @@ form[role="search"]>input.form-control {
     form[role="search"]>input.form-control:focus+.content {
         background-color: #0000003a;
     }
-}
+} */
