@@ -1,4 +1,9 @@
+/**
+ * This file contains the logic for user interface related functionality
+ */
 
+// TODO: Move all dialog related functions into a base class and
+//       inherit all dialog related classes from it
 class InputDialog {
     constructor(title, message, btn_confirm_text, input_placeholder) {
         this.dialog = document.getElementById("dialog-input")

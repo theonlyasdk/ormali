@@ -24,8 +24,10 @@
 </head>
 
 <body>
-    <!-- FOUC fix -->
-    <script>0</script>
+    <script>
+	/* To prevent Firefox FOUC, this must be here */
+	let FF_FOUC_FIX;
+    </script>
 
     <div id="dialog-dim-overlay" style="display: none;"></div>
 

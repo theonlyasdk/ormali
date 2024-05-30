@@ -1,5 +1,5 @@
 /**
- * This script contains the logic for Ormali
+ * This file contains logic for task cards
  */
 
 const generate_uuid = () => {
@@ -36,8 +36,8 @@ class Task {
     }
 
     build_html() {
-        let btn_done_color = this.done ? "btn-secondary" : "btn-primary";
-        let btn_done_icon = this.done ? "bi-check-all" : "bi-check";
+        let btn_done_color = this.done ? "btn-secondary" : "btn-primary"
+        let btn_done_icon = this.done ? "bi-check-all" : "bi-check"
 
         return `
             <div class="card task" style="width: 18rem" id="task-${this.id}">
@@ -47,8 +47,19 @@ class Task {
                         <p class="card-text">${this.content}</p>
                     </div>
                     <div class="card-btn-container">
-                        <a href="#" class="btn ${btn_done_color} task-btn-done" onclick="task_list.mark_done('${this.id}')"><i class="bi ${btn_done_icon}"></i></a>                
-                        <a href="#" class="btn btn-danger task-btn-delete" onclick="task_list.remove('${this.id}')"><i class="bi bi-trash-fill"></i></a>                
+                        <a href="#" 
+                           class="btn ${btn_done_color} 
+                           task-btn-done" 
+                           onclick="task_list.mark_done('${this.id}')"
+                           title="Mark as done">
+                            <i class="bi ${btn_done_icon}"></i>
+                        </a>
+                        <a href="#" 
+                           class="btn btn-danger task-btn-delete" 
+                           onclick="task_list.remove('${this.id}')"
+                           title="Delete task">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -92,17 +103,17 @@ class TaskList {
 
     mark_done(task_id) {
         let task_to_mark_done = this.tasks.find(item => item.id === task_id)
-        let task_done_status = task_to_mark_done.done;
+        let task_done_status = task_to_mark_done.done
         let task_btn_done = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > a.task-btn-done`)
         let task_btn_done_icon = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > a.task-btn-done > i.bi`)
 
-        // Toggle the 'done' status of the task;
-        task_to_mark_done.done = !task_done_status;
+        // Toggle the 'done' status of the task
+        task_to_mark_done.done = !task_done_status
 
-        task_btn_done.classList.toggle("btn-primary");
-        task_btn_done.classList.toggle("btn-secondary");
-        task_btn_done_icon.classList.toggle("bi-check");
-        task_btn_done_icon.classList.toggle("bi-check-all");
+        task_btn_done.classList.toggle("btn-primary")
+        task_btn_done.classList.toggle("btn-secondary")
+        task_btn_done_icon.classList.toggle("bi-check")
+        task_btn_done_icon.classList.toggle("bi-check-all")
 
         this.save_into_local_storage()
     }
@@ -144,19 +155,19 @@ class TaskList {
     }
 
     filter_tasks(filter) {
-        const tasks = document.querySelectorAll('#tasks-container .task');
+        const tasks = document.querySelectorAll('#tasks-container .task')
         tasks.forEach(task => {
-            task.classList.remove('d-none');
-            const title = task.querySelector('.card-title').innerText.toLowerCase();
+            task.classList.remove('d-none')
+            const title = task.querySelector('.card-title').innerText.toLowerCase()
             if (!title.includes(filter)) {
-                task.classList.add('d-none');
+                task.classList.add('d-none')
             }
         })
     }
 
     reset_search_filters() {
-        const allTasks = document.querySelectorAll('#tasks-container .task.d-none');
-        allTasks.forEach(task => task.classList.remove('d-none'));
+        const allTasks = document.querySelectorAll('#tasks-container .task.d-none')
+        allTasks.forEach(task => task.classList.remove('d-none'))
     }
 }
 
