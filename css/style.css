@@ -134,7 +134,7 @@ body {
 small,
 span,
 h3 {
-    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace; */
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace;
 }
 
 .btn-primary {
