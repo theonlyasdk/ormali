@@ -239,13 +239,13 @@ task_list.load_from_local_storage()
 task_list.save_into_local_storage()
 task_list.flush_to_page(TaskList.get_task_list_container())
 
-const filterInput = document.getElementById('task-search');
-filterInput.addEventListener('submit', (e) => {
+const task_search = document.getElementById('task-search');
+task_search.addEventListener('keyup', (e) => {
     e.preventDefault();
     const userInput = document.querySelector('.field-search').value.trim().toLowerCase();
     if (userInput !== '') {
-        task_list.filterTasks(userInput);
+        task_list.filter_tasks(userInput);
     } else {
-        task_list.removeTasksFilter();
+        task_list.reset_search_filters();
     }
 });

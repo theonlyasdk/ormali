@@ -143,21 +143,20 @@ class TaskList {
         localStorage.setItem("ormali_tasks", tasksJSON)
     }
 
-    filterTasks(userInput) {
-        const allTasks = document.querySelectorAll('#tasks-container .task');
-        allTasks.forEach(task => {
+    filter_tasks(filter) {
+        const tasks = document.querySelectorAll('#tasks-container .task');
+        tasks.forEach(task => {
             task.classList.remove('d-none');
             const title = task.querySelector('.card-title').innerText.toLowerCase();
-            if (!title.includes(userInput)) {
+            if (!title.includes(filter)) {
                 task.classList.add('d-none');
             }
         })
     }
 
-    removeTasksFilter() {
+    reset_search_filters() {
         const allTasks = document.querySelectorAll('#tasks-container .task.d-none');
         allTasks.forEach(task => task.classList.remove('d-none'));
     }
-
 }
 
