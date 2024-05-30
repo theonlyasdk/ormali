@@ -12,6 +12,7 @@
 */
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Nanum Gothic Coding:ital,wght@0,400;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap');
 
 /*
     Section: Animations
@@ -60,6 +61,13 @@
         opacity: 100%;
         backdrop-filter: blur(4px);
     }
+}
+
+/* 
+    Font classes
+*/
+.mono {
+    font-family: "Nanum Gothic Coding", monospace;
 }
 
 /* 
@@ -130,7 +138,7 @@ h3 {
 }
 
 .btn-primary {
-    transition: all 50ms ease;
+    transition: 80ms cubic-bezier(0.25, 1, 0.5, 1);
     background-color: var(--accent-primary-highlight) !important;
     border-color: var(--accent-primary) !important;
 }
@@ -142,9 +150,8 @@ h3 {
 
 .btn-secondary {
     --border-width: 3px;
-    transition: all 50ms ease;
+    transition: 80ms cubic-bezier(0.25, 1, 0.5, 1);
     background-color: var(--accent-secondary) !important;
-    border-color: var(--accent-primary) !important;
 }
 
 .btn-secondary:active {
@@ -206,7 +213,7 @@ h3 {
 }
 
 .body-heading {
-    /* font-family: "Nanum Gothic Coding", monospace; */
+    font-family: "Nanum Gothic Coding", monospace;
     font-weight: bolder;
     user-select: none;
     text-shadow: 3px 3px 2px #282828;
@@ -249,7 +256,7 @@ h3 {
     transition: 150ms ease-out;
     margin-bottom: .8em;
     z-index: 0;
-    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
 }
 
 .task>div>div>a.btn {
@@ -299,7 +306,7 @@ h3 {
     background-color: var(--accent-primary-semi-transparent);
     color: var(--text-color);
     backdrop-filter: blur(10px);
-    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
     font-weight: bolder !important;
     padding: .5em 1em .5em 1em;
     border: none;
@@ -320,7 +327,7 @@ h3 {
 }
 
 .popover-body {
-    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
     font-size: small;
     font-weight: bold;
     line-height: 1.2em;
@@ -333,7 +340,7 @@ h3 {
     border-radius: .5em;
     box-shadow: 0px 4px 7px #00000047;
     z-index: 10;
-    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
     position: fixed;
     min-width: 40em;
 }
@@ -368,8 +375,9 @@ h3 {
     height: 100%;
     margin-bottom: 0.11em;
 }
+
 .dialog-anim-opening {
-    animation: anim-dialog-opening 180ms cubic-bezier(.26, -0.01, 0, 1.33) 1;
+    animation: anim-dialog-opening 200ms cubic-bezier(0.34, 1.56, 0.64, 1) 1;
 }
 
 .dialog-anim-closing {
@@ -405,11 +413,15 @@ h3 {
     flex: 1;
 }
 
+.dropdown-item {
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
+}
+
 .navbar-nav>li,
 .nav-search,
 .nav-search::placeholder {
-    /* font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important; */
-    font-weight: bolder !important;
+    font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
+    /* font-weight: bolder !important; */
 }
 
 .navbar-nav>li:hover {
@@ -450,6 +462,20 @@ h3 {
 
 .btn-search {
     height: 90%;
+    background-color: var(--accent-primary-dim);
+    border-color: var(--accent-primary-highlight);
+    color: white;
+    transition: 80ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.btn-search:hover {
+    background-color: var(--accent-primary-dim);
+    border-color: var(--accent-primary-highlight);
+}
+
+.btn-search:active {
+    background-color: var(--accent-primary-dim-semi-transparent) !important;
+    border-color: var(--accent-primary-highlight-semi-transparent) !important;
 }
 
 .bs-tooltip {
