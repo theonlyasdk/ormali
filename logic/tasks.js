@@ -42,7 +42,7 @@ class Task {
         return `
             <div class="card task" style="width: 18rem" id="task-${this.id}">
                 <div class="card-body">
-                    <div class="card-text-content"> 
+                    <div class="card-text-content mb-2"> 
                         <h5 class="card-title display-6"><b>${this.name}</b></h5>
                         <p class="card-text">${this.content}</p>
                     </div>
@@ -59,6 +59,12 @@ class Task {
                            onclick="task_list.remove('${this.id}')"
                            title="Delete task">
                             <i class="bi bi-trash-fill"></i>
+                        </a>
+                        <a href="#" 
+                        class="btn btn-primary" 
+                        onclick="task_list.edit('${this.id}')"
+                        title="Edit task">
+                        <i class="bi bi-pencil-fill"></i>
                         </a>
                     </div>
                 </div>
@@ -95,6 +101,29 @@ class TaskList {
             this.toggle_visibility_of_no_tasks_placeholder()
             this.save_into_local_storage()
         }
+    }
+
+    edit(task_id) {
+        const task_to_edit = this.tasks.find(task => task.id == task_id);
+        const { name: title, content } = task_to_edit;
+        const btn_confirm_text = 'Update task';
+        const dialog_heading = 'Edit existing task...';
+        const dialog_edit_task = new NewTaskDialog(title, content, btn_confirm_text, dialog_heading);
+
+        dialog_edit_task.register_events()
+        dialog_edit_task.show();
+
+        dialog_edit_task.set_on_dialog_close(() => {
+
+            if (!check_not_null_or_empty(dialog_edit_task.field_content.value) ||
+                !check_not_null_or_empty(dialog_edit_task.field_title.value)) return
+
+            task_to_edit.content = dialog_edit_task.field_content.value;
+            task_to_edit.name = dialog_edit_task.field_title.value;
+
+            task_list.flush_to_page(TaskList.get_task_list_container())
+            task_list.save_into_local_storage()
+        })
     }
 
     get(index) {

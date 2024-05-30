@@ -54,14 +54,14 @@ class InputDialog {
         })
     }
 }
+
 class NewTaskDialog {
-    constructor(default_title = "") {
-        this.default_title = default_title
+    constructor(title = '', content = '', btn_confirm_text = 'Create', heading = 'Add new task..') {
         this.dialog_container = document.getElementById("container-dialog-new-task")
         this.dialog = document.getElementById("dialog-new-task")
+        this.dialog_heading = document.getElementById("dialog-heading")
         this.btn_confirm = document.getElementById("dialog-new-task-btn-confirm")
         this.btn_close = document.getElementById("dialog-new-task-btn-close")
-        this.btn_open_dialog = document.getElementById("btn-trigger-new-task-dialog")
         this.btn_generate_tasks = document.getElementById("dialog-new-task-btn-generate-tasks")
         this.dialog_dim_overlay = document.getElementById("dialog-dim-overlay")
         this.dialog_new_task_form = document.getElementById("dialog-new-task-form")
@@ -73,6 +73,11 @@ class NewTaskDialog {
 
         this.alert_error.style.display = "none"
         this.alert_warning.style.display = "none"
+
+        this.field_title.value = title;
+        this.field_content.value = content;
+        this.btn_confirm.innerText = btn_confirm_text;
+        this.dialog_heading.innerText = heading;
     }
 
     show() {
@@ -80,9 +85,6 @@ class NewTaskDialog {
         this.dialog.show()
         this.dialog.classList.remove("dialog-anim-closing")
         this.dialog.classList.add("dialog-anim-opening")
-
-        this.field_content.value = ""
-        this.field_title.value = ""
     }
 
     close() {
@@ -97,7 +99,7 @@ class NewTaskDialog {
             this.close()
             this.on_dialog_close()
         })
-        this.btn_open_dialog.addEventListener("click", () => this.show())
+
         this.dialog.addEventListener("keydown", (event) => {
             if (event.key === "Escape" && this.dialog.open) {
                 this.close()
@@ -229,15 +231,19 @@ if (!window.is_using_mobile_device()) {
     })
 }
 
-let dialog_new_task = new NewTaskDialog()
-dialog_new_task.register_events()
-dialog_new_task.set_on_dialog_close(() => {
-    if (!check_not_null_or_empty(dialog_new_task.field_content.value) ||
-        !check_not_null_or_empty(dialog_new_task.field_title.value)) return
+const btn_open_dialog = document.getElementById("btn-trigger-new-task-dialog");
+btn_open_dialog.addEventListener('click', () => {
+    let dialog_new_task = new NewTaskDialog()
+    dialog_new_task.register_events()
+    dialog_new_task.show();
+    dialog_new_task.set_on_dialog_close(() => {
+        if (!check_not_null_or_empty(dialog_new_task.field_content.value) ||
+            !check_not_null_or_empty(dialog_new_task.field_title.value)) return
 
-    task_list.add(new Task(dialog_new_task.field_title.value, dialog_new_task.field_content.value, Date.now(), false))
-    task_list.flush_to_page(TaskList.get_task_list_container())
-    task_list.save_into_local_storage()
+        task_list.add(new Task(dialog_new_task.field_title.value, dialog_new_task.field_content.value, Date.now(), false))
+        task_list.flush_to_page(TaskList.get_task_list_container())
+        task_list.save_into_local_storage()
+    })
 })
 
 task_list.load_from_local_storage()
