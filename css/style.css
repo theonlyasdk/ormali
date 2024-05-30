@@ -424,6 +424,12 @@ h3 {
     align-items: center;
 }
 
+/* Hide the 'x' (clear) button in Chrome, Safari, and Edge */
+.nav-search input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
 .nav-centered {
     display: flex;
     flex-direction: row;

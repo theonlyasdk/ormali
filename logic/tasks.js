@@ -142,5 +142,22 @@ class TaskList {
         const tasksJSON = JSON.stringify(this.tasks.map(task => task.as_object()))
         localStorage.setItem("ormali_tasks", tasksJSON)
     }
+
+    filterTasks(userInput) {
+        const allTasks = document.querySelectorAll('#tasks-container .task');
+        allTasks.forEach(task => {
+            task.classList.remove('d-none');
+            const title = task.querySelector('.card-title').innerText.toLowerCase();
+            if (!title.includes(userInput)) {
+                task.classList.add('d-none');
+            }
+        })
+    }
+
+    removeTasksFilter() {
+        const allTasks = document.querySelectorAll('#tasks-container .task.d-none');
+        allTasks.forEach(task => task.classList.remove('d-none'));
+    }
+
 }
 

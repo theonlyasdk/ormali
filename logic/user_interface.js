@@ -176,12 +176,12 @@ class NewTaskDialog {
 
         try {
             const result = await model.generateContentStream(prompt)
-            
+
             this.field_content.value = ""
 
             for await (const chunk of result.stream) {
                 const chunkText = chunk.text()
-                
+
                 this.field_content.scrollTop = this.field_content.scrollHeight
                 this.field_content.value += chunkText
             }
@@ -238,3 +238,14 @@ dialog_new_task.set_on_dialog_close(() => {
 task_list.load_from_local_storage()
 task_list.save_into_local_storage()
 task_list.flush_to_page(TaskList.get_task_list_container())
+
+const filterInput = document.getElementById('task-search');
+filterInput.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const userInput = document.querySelector('.field-search').value.trim().toLowerCase();
+    if (userInput !== '') {
+        task_list.filterTasks(userInput);
+    } else {
+        task_list.removeTasksFilter();
+    }
+});
