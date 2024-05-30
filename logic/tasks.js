@@ -47,25 +47,22 @@ class Task {
                         <p class="card-text">${this.content}</p>
                     </div>
                     <div class="card-btn-container">
-                        <a href="#" 
-                           class="btn ${btn_done_color} 
-                           task-btn-done" 
-                           onclick="task_list.mark_done('${this.id}')"
-                           title="Mark as done">
+                        <button class="btn ${btn_done_color} 
+                                task-btn-done" 
+                                onclick="task_list.mark_done('${this.id}')"
+                                title="Mark as done">
                             <i class="bi ${btn_done_icon}"></i>
-                        </a>
-                        <a href="#" 
-                           class="btn btn-danger task-btn-delete" 
-                           onclick="task_list.remove('${this.id}')"
-                           title="Delete task">
+                        </button>
+                        <button class="btn btn-primary" 
+                                onclick="task_list.edit('${this.id}')"
+                                title="Edit task">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button class="btn btn-danger task-btn-delete" 
+                                onclick="task_list.remove('${this.id}')"
+                                title="Delete task">
                             <i class="bi bi-trash-fill"></i>
-                        </a>
-                        <a href="#" 
-                        class="btn btn-primary" 
-                        onclick="task_list.edit('${this.id}')"
-                        title="Edit task">
-                        <i class="bi bi-pencil-fill"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -107,7 +104,7 @@ class TaskList {
         const task_to_edit = this.tasks.find(task => task.id == task_id);
         const { name: task_title, content: task_content } = task_to_edit;
         const btn_confirm_text = 'Update task';
-        const dialog_heading = 'Edit existing task...';
+        const dialog_heading = 'Edit task...';
         const dialog_edit_task = new NewTaskDialog(task_title, task_content, dialog_heading, btn_confirm_text);
 
         dialog_edit_task.register_events()
@@ -134,8 +131,8 @@ class TaskList {
     mark_done(task_id) {
         let task_to_mark_done = this.tasks.find(item => item.id === task_id)
         let task_done_status = task_to_mark_done.done
-        let task_btn_done = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > a.task-btn-done`)
-        let task_btn_done_icon = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > a.task-btn-done > i.bi`)
+        let task_btn_done = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > button.task-btn-done`)
+        let task_btn_done_icon = document.querySelector(`#task-${task_id} .card-body > .card-btn-container > button.task-btn-done > i.bi`)
 
         // Toggle the 'done' status of the task
         task_to_mark_done.done = !task_done_status
