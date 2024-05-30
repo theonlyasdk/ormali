@@ -55,8 +55,9 @@ class InputDialog {
     }
 }
 
+// TODO: Also move some of the functionality in this class to a base class
 class NewTaskDialog {
-    constructor(title = '', content = '', btn_confirm_text = 'Create', heading = 'Add new task..') {
+    constructor(field_title_value = '', field_content_value = '', dialog_heading = 'Add new task..', btn_confirm_text = 'Create') {
         this.dialog_container = document.getElementById("container-dialog-new-task")
         this.dialog = document.getElementById("dialog-new-task")
         this.dialog_heading = document.getElementById("dialog-heading")
@@ -74,10 +75,10 @@ class NewTaskDialog {
         this.alert_error.style.display = "none"
         this.alert_warning.style.display = "none"
 
-        this.field_title.value = title;
-        this.field_content.value = content;
+        this.field_title.value = field_title_value;
+        this.field_content.value = field_content_value;
         this.btn_confirm.innerText = btn_confirm_text;
-        this.dialog_heading.innerText = heading;
+        this.dialog_heading.innerText = dialog_heading;
     }
 
     show() {
@@ -142,9 +143,7 @@ class NewTaskDialog {
         this.alert_warning.style.display = "block"
         this.alert_warning.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i>&nbsp&nbsp${error}`
 
-        setTimeout(() => {
-            this.hide_warning()
-        }, 4000)
+        setTimeout(() => this.hide_warning(), 4000)
     }
 
     hide_warning() {
@@ -165,10 +164,12 @@ class NewTaskDialog {
         }
 
         this.hide_error()
+        this.hide_warning()
 
         // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
         const model = window.gen_ai.getGenerativeModel({ model: "gemini-1.5-flash" })
 
+        // If the content generation shows something irrelevant, tell it not to by adding to the lines below
         const prompt_rules = `
             1. Do not use markdown. Instead use ASCII/Unicode characters.
             2. Only produce task content. Do not produce any system messages or any other kind of non-task text
@@ -187,10 +188,8 @@ class NewTaskDialog {
             this.field_content.value = ""
 
             for await (const chunk of result.stream) {
-                const chunkText = chunk.text()
-
+                this.field_content.value += chunk.text()
                 this.field_content.scrollTop = this.field_content.scrollHeight
-                this.field_content.value += chunkText
             }
         } catch (error) {
             if (error.toString().includes("API key not valid. Please pass a valid API key.")) {
