@@ -21,14 +21,10 @@
     <!-- Put the style.css after Bootstrap css -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations/border-spinning.css">
+    <link rel="stylesheet" href="css/animations/loading-spinner.css">
 </head>
 
 <body>
-    <script>
-	/* To prevent Firefox FOUC, this must be here */
-	let FF_FOUC_FIX;
-    </script>
-
     <div id="dialog-dim-overlay" style="display: none;"></div>
 
     <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
@@ -66,7 +62,8 @@
                     <form class="d-flex nav-search" role="search" id="task-search">
                         <input class="form-control me-2 field-search" type="search" placeholder="Search your tasks..."
                             aria-label="Search">
-                        <button class="btn btn-outline-success btn-search" type="submit"><i class="bi bi-search"></i></button>
+                        <button class="btn btn-outline-success btn-search" type="submit"><i
+                                class="bi bi-search"></i></button>
                     </form>
 
                     <div class="dropdown dropdown-end d-flex justify-content-between justify-content-lg-end">
@@ -121,6 +118,10 @@
                     name="dialog-new-task-title" class="form-control bg-dark text-white" autocomplete="off">
                 <textarea id="dialog-new-task-content" placeholder="Type your tasks here..."
                     class="form-control bg-dark text-white" rows="10"></textarea>
+                <div id="dialog-new-task-checklist-container"></div>
+                <div id="dialog-new-task-content-generating" style="display: none;">
+                    <div class="loader"></div>
+                </div>
                 <div class="alert alert-danger" role="alert" id="dialog-new-task-alert-error">
                     ...
                 </div>
@@ -131,7 +132,8 @@
                 <div class="flex-horiz">
                     <button id="dialog-new-task-btn-confirm" class="btn btn-primary" type="button">Confirm</button>
                     <button id="dialog-new-task-btn-generate-tasks" class="btn btn-secondary btn-content-generating"
-                        type="button" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top" data-bs-custom-class="bs-tooltip"
+                        type="button" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="top"
+                        data-bs-custom-class="bs-tooltip"
                         data-bs-content="Generates appropriate content based on the given title for the task using Google Gemini (Requires API key. Set it via the cog icon in the navbar)">
                         <span id="btn-generate-tasks-text">Generate tasks <i class="bi bi-stars"></i></span>
                     </button>

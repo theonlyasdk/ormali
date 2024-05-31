@@ -71,6 +71,11 @@ class NewTaskDialog {
         this.alert_warning = document.getElementById("dialog-new-task-alert-warning")
         this.alert_error.style.display = "none"
         this.alert_warning.style.display = "none"
+        this.checklist_container = document.getElementById("dialog-new-task-checklist-container")
+        this.checklist_container_loading = document.getElementById("dialog-new-task-content-generating")
+
+        this.checklist_container.innerHTML = ''
+        this.checklist = {}
     }
 
     show(task_id) {
@@ -102,7 +107,7 @@ class NewTaskDialog {
         this.dialog.classList.add("dialog-anim-closing")
         this.dialog.close()
     }
-    
+
     register_events() {
         this.btn_confirm.addEventListener("click", () => {
             this.close()
@@ -191,14 +196,49 @@ class NewTaskDialog {
         const prompt = `Create content for a todo task based on the following title: '${this.field_title.value}'. ${prompt_rules}`
 
         try {
-            const result = await model.generateContentStream(prompt)
-
+            this.checklist_container.innerHTML = ''
+            this.checklist_container_loading.style.display = 'flex'
+            this.field_content.style.display = 'none'
             this.field_content.value = ""
 
-            for await (const chunk of result.stream) {
-                this.field_content.value += chunk.text()
-                this.field_content.scrollTop = this.field_content.scrollHeight
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+
+            const lines = text.split("\n")
+
+            lines.forEach(line => {
+                const match = line.match(/^(\d+)\.\s+(.*)$/)
+                if (match) {
+                    const number = parseInt(match[1])
+                    const value = match[2]
+                    this.checklist[number] = value
+                    const checkbox = document.createElement("div")
+                    checkbox.classList.add("form-check")
+                    const input = document.createElement("input")
+                    input.type = "checkbox"
+                    input.classList.add("form-check-input")
+                    input.id = `dialog-new-task-checklist-${number}`
+                    input.value = value
+                    const label = document.createElement("label")
+                    label.classList.add("form-check-label")
+                    label.htmlFor = `dialog-new-task-checklist-${number}`
+                    label.innerHTML = value
+                    checkbox.appendChild(input)
+                    checkbox.appendChild(label)
+                    this.checklist_container.appendChild(checkbox)
+                }
+            })
+
+            this.checklist_container_loading.style.display = 'none'
+
+            if (checklist.length > 0) {
+                this.field_content.style.display = 'none'
             }
+
+            this.field_content.value = text
+            this.field_content.scrollTop = this.field_content.scrollHeight
+
         } catch (error) {
             if (error.toString().includes("API key not valid. Please pass a valid API key.")) {
                 this.show_error("Invalid Gemini API key. Please set it in the settings!")
@@ -244,19 +284,25 @@ let dialog_new_task = new NewTaskDialog()
 dialog_new_task.register_events()
 
 dialog_new_task.set_on_dialog_close(() => {
-    if (!check_not_null_or_empty(dialog_new_task.field_content.value) ||
+    if ((!check_not_null_or_empty(dialog_new_task.field_content.value) && dialog_new_task.checklist.length == 0) ||
         !check_not_null_or_empty(dialog_new_task.field_title.value)) return
 
     // if dialog has id, we need to edit task.
-    const task_id = dialog_new_task.dialog.dataset.id;
-    if (task_id) {
+    const task_id = dialog_new_task.dialog.dataset.id
 
-        const task_to_edit = task_list.tasks.find(task => task.id == task_id);
-        task_to_edit.name = dialog_new_task.field_title.value;
-        task_to_edit.content = dialog_new_task.field_content.value;
+    if (task_id) {
+        const task_to_edit = task_list.tasks.find(task => task.id == task_id)
+
+        task_to_edit.checklist = dialog_new_task.checklist
+        task_to_edit.name = dialog_new_task.field_title.value
+        task_to_edit.content = dialog_new_task.field_content.value
 
     } else {
-        task_list.add(new Task(dialog_new_task.field_title.value, dialog_new_task.field_content.value, Date.now(), false))
+        task_list.add(new Task(dialog_new_task.field_title.value,
+            dialog_new_task.field_content.value,
+            new Date().toISOString().split('T')[0],
+            false,
+            dialog_new_task.checklist))
     }
 
     task_list.flush_to_page(TaskList.get_task_list_container())

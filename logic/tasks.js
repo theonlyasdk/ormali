@@ -20,12 +20,13 @@ const generate_uuid = () => {
 }
 
 class Task {
-    constructor(name, content, date, done) {
+    constructor(name, content, date, done, checklist) {
         this.name = name
         this.content = content
         this.date = date
         this.done = done
         this.id = generate_uuid()
+        this.checklist = checklist
     }
 
     from_json(json) {
@@ -34,6 +35,7 @@ class Task {
         this.date = json['date']
         this.done = json['done'] !== undefined ? json['done'] : false
         this.id = json['id']
+        this.checklist = json['checklist']
     }
 
     as_object() {
@@ -42,7 +44,8 @@ class Task {
             content: this.content,
             date: this.date,
             done: this.done,
-            id: this.id
+            id: this.id,
+            checklist: this.checklist,
         }
     }
 
@@ -56,6 +59,17 @@ class Task {
                     <div class="card-text-content mb-2"> 
                         <h5 class="card-title display-6"><b>${this.name}</b></h5>
                         <p class="card-text">${this.content}</p>
+                        <small class="task-date"><i>${this.date}</i></small>
+                    </div>
+                    <div class="mb-2">
+                    ${Object.entries(this.checklist).map(([number, value]) => `
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="checklist-${this.id}-${number}">
+                            <label class="form-check-label" for="checklist-${this.id}-${number}">
+                                ${number}. ${value}
+                            </label>
+                        </div>
+                    `).join('')}
                     </div>
                     <div class="card-btn-container">
                         <button class="btn ${btn_done_color} 
@@ -81,6 +95,7 @@ class Task {
                             <i class="bi bi-trash-fill"></i>
                         </button>
                     </div>
+
                 </div>
             </div>
         `
