@@ -105,9 +105,12 @@ class TaskList {
     }
 
     clear() {
+        if (!confirm("Clear tasks?")) return
+
         this.tasks = []
         TaskList.get_task_list_container().innerHTML = ""
         this.toggle_visibility_of_no_tasks_placeholder()
+        this.save_into_local_storage()
     }
 
     toggle_visibility_of_no_tasks_placeholder() {
