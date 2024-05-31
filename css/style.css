@@ -260,8 +260,10 @@ h3 {
     background-color: var(--card-bg);
     transition: 150ms ease-out;
     margin-bottom: .8em;
+    margin-right: .8em;
     z-index: 0;
     font-family: "Nanum Gothic Coding", "Inconsolata", monospace !important;
+    flex: 1 0 25%; /* This will make each task take up 25% of the container width */
 }
 
 .task>div>div>a.btn {
@@ -539,5 +541,9 @@ h3 {
 
     .dialog {
         min-width: 20em;
+    }
+
+    .task {
+        flex: 1 0 50%; /* This will make each task take up 50% of the container width on smaller screens */
     }
 }
