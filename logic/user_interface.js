@@ -41,17 +41,15 @@ class InputDialog {
 
     set_on_dialog_close = (event) => { this.on_dialog_close = event }
     set_dialog_trigger = (element) => { this.dialog_trigger = element }
-    register_events() {
-        this.dialog_trigger.addEventListener('click', () => this.show())
-        this.btn_confirm.addEventListener('click', () => this.close())
-        this.dialog.addEventListener("keydown", (event) => {
-            if (event.key === "Escape" && this.dialog.open) {
-                this.close()
+    registerEvents() {
+        this.dialog_trigger.addEventListener('click', () => this.show());
+        this.btn_confirm.addEventListener('click', () => this.close());
+        this.dialog.addEventListener('keydown', ({ key }) => {
+            if (key === 'Escape' && this.dialog.open) {
+                this.close();
             }
-        })
-        this.btn_close.addEventListener("click", () => {
-            this.close()
-        })
+        });
+        this.btn_close.addEventListener('click', () => this.close());
     }
 }
 class NewTaskDialog {
@@ -104,7 +102,7 @@ class NewTaskDialog {
         this.dialog.classList.add("dialog-anim-closing")
         this.dialog.close()
     }
-
+    
     register_events() {
         this.btn_confirm.addEventListener("click", () => {
             this.close()
@@ -224,20 +222,22 @@ let dialog_trigger = document.getElementById("dialog-input-api-key-trigger")
 if (!window.is_using_mobile_device()) {
     let dialog_message = `Go to <a href="https://aistudio.google.com/app/">https://aistudio.google.com/app/</a> to obtain your API key.`
     let dialog_get_api_key = new InputDialog("Enter API Key", dialog_message, "Save", "Paste your Gemini API key here...")
+
     dialog_get_api_key.set_dialog_trigger(dialog_trigger)
     dialog_get_api_key.set_on_dialog_close(() => {
         if (dialog_get_api_key.field_input.value == "") return
         localStorage.setItem("ormali.generativeai.gemini.api_key", dialog_get_api_key.field_input.value)
         window.location.reload()
     })
-    dialog_get_api_key.register_events()
+    dialog_get_api_key.registerEvents()
 } else {
     dialog_trigger.addEventListener('click', () => {
-        let value = prompt('Enter Gemini API key')
-        if (value == "") return
-        localStorage.setItem("ormali.generativeai.gemini.api_key", value)
-        window.location.reload()
-    })
+        const key = prompt('Enter Gemini API key');
+        if (key) {
+            localStorage.setItem('ormali.generativeai.gemini.api_key', key);
+            window.location.reload();
+        }
+    });
 }
 
 let dialog_new_task = new NewTaskDialog()
@@ -264,7 +264,6 @@ dialog_new_task.set_on_dialog_close(() => {
 })
 
 task_list.load_from_local_storage()
-task_list.save_into_local_storage()
 task_list.flush_to_page(TaskList.get_task_list_container())
 
 const task_search = document.getElementById('task-search');

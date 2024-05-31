@@ -2,10 +2,21 @@
  * This file contains logic for task cards
  */
 
+
+/**
+ * Generates a UUID v4
+ *
+ * @return {string} A UUID v4
+ */
 const generate_uuid = () => {
-    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-        (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-    )
+    // Generates a UUID v4 using the Math.random() function
+    // Source: https://stackoverflow.com/a/2117523
+    return "10000000-1000-4000-8000-100000000000"
+        .replace(/[018]/g, c =>
+            // Generates a random hexadecimal digit
+            // Source: https://stackoverflow.com/a/6248722
+            (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+        );
 }
 
 class Task {
