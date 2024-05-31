@@ -54,15 +54,15 @@ class InputDialog {
         })
     }
 }
-
-// TODO: Also move some of the functionality in this class to a base class
 class NewTaskDialog {
-    constructor(field_title_value = '', field_content_value = '', dialog_heading = 'Add new task..', btn_confirm_text = 'Create') {
+    constructor(default_title = "") {
+        this.default_title = default_title
         this.dialog_container = document.getElementById("container-dialog-new-task")
         this.dialog = document.getElementById("dialog-new-task")
         this.dialog_heading = document.getElementById("dialog-heading")
         this.btn_confirm = document.getElementById("dialog-new-task-btn-confirm")
         this.btn_close = document.getElementById("dialog-new-task-btn-close")
+        this.btn_open_dialog = document.getElementById("btn-trigger-new-task-dialog")
         this.btn_generate_tasks = document.getElementById("dialog-new-task-btn-generate-tasks")
         this.dialog_dim_overlay = document.getElementById("dialog-dim-overlay")
         this.dialog_new_task_form = document.getElementById("dialog-new-task-form")
@@ -71,21 +71,31 @@ class NewTaskDialog {
         this.text_btn_generate_tasks = document.getElementById("btn-generate-tasks-text")
         this.alert_error = document.getElementById("dialog-new-task-alert-error")
         this.alert_warning = document.getElementById("dialog-new-task-alert-warning")
-
         this.alert_error.style.display = "none"
         this.alert_warning.style.display = "none"
-
-        this.field_title.value = field_title_value;
-        this.field_content.value = field_content_value;
-        this.btn_confirm.innerText = btn_confirm_text;
-        this.dialog_heading.innerText = dialog_heading;
     }
 
-    show() {
+    show(task_id) {
         this.dialog_dim_overlay.style.display = "block"
         this.dialog.show()
         this.dialog.classList.remove("dialog-anim-closing")
         this.dialog.classList.add("dialog-anim-opening")
+        task_id ? this.edit_task_dialog(task_id) : this.new_task_dialog()
+    }
+
+    new_task_dialog() {
+        this.dialog.removeAttribute('data-id');
+        this.field_content.value = ""
+        this.field_title.value = ""
+        this.dialog_heading.innerText = 'Add new task...';
+    }
+
+    edit_task_dialog(task_id) {
+        this.dialog.setAttribute('data-id', task_id)
+        const task_to_edit = task_list.tasks.find(task => task.id == task_id);
+        this.field_title.value = task_to_edit.name;
+        this.field_content.value = task_to_edit.content;
+        this.dialog_heading.innerText = 'Edit existing task...';
     }
 
     close() {
@@ -100,7 +110,7 @@ class NewTaskDialog {
             this.close()
             this.on_dialog_close()
         })
-
+        this.btn_open_dialog.addEventListener("click", () => this.show())
         this.dialog.addEventListener("keydown", (event) => {
             if (event.key === "Escape" && this.dialog.open) {
                 this.close()
@@ -230,19 +240,27 @@ if (!window.is_using_mobile_device()) {
     })
 }
 
-const btn_open_dialog = document.getElementById("btn-trigger-new-task-dialog");
-btn_open_dialog.addEventListener('click', () => {
-    let dialog_new_task = new NewTaskDialog()
-    dialog_new_task.register_events()
-    dialog_new_task.show();
-    dialog_new_task.set_on_dialog_close(() => {
-        if (!check_not_null_or_empty(dialog_new_task.field_content.value) ||
-            !check_not_null_or_empty(dialog_new_task.field_title.value)) return
+let dialog_new_task = new NewTaskDialog()
+dialog_new_task.register_events()
 
+dialog_new_task.set_on_dialog_close(() => {
+    if (!check_not_null_or_empty(dialog_new_task.field_content.value) ||
+        !check_not_null_or_empty(dialog_new_task.field_title.value)) return
+
+    // if dialog has id, we need to edit task.
+    const task_id = dialog_new_task.dialog.dataset.id;
+    if (task_id) {
+
+        const task_to_edit = task_list.tasks.find(task => task.id == task_id);
+        task_to_edit.name = dialog_new_task.field_title.value;
+        task_to_edit.content = dialog_new_task.field_content.value;
+
+    } else {
         task_list.add(new Task(dialog_new_task.field_title.value, dialog_new_task.field_content.value, Date.now(), false))
-        task_list.flush_to_page(TaskList.get_task_list_container())
-        task_list.save_into_local_storage()
-    })
+    }
+
+    task_list.flush_to_page(TaskList.get_task_list_container())
+    task_list.save_into_local_storage()
 })
 
 task_list.load_from_local_storage()

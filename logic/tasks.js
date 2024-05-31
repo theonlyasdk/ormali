@@ -54,7 +54,7 @@ class Task {
                             <i class="bi ${btn_done_icon}"></i>
                         </button>
                         <button class="btn btn-primary" 
-                                onclick="task_list.edit('${this.id}')"
+                                onclick="dialog_new_task.show('${this.id}')"
                                 title="Edit task">
                             <i class="bi bi-pencil-fill"></i>
                         </button>
@@ -98,30 +98,6 @@ class TaskList {
             this.toggle_visibility_of_no_tasks_placeholder()
             this.save_into_local_storage()
         }
-    }
-
-    edit(task_id) {
-        const task_to_edit = this.tasks.find(task => task.id == task_id);
-        const { name: task_title, content: task_content } = task_to_edit;
-        const btn_confirm_text = 'Update task';
-        const dialog_heading = 'Edit task...';
-        const dialog_edit_task = new NewTaskDialog(task_title, task_content, dialog_heading, btn_confirm_text);
-
-        dialog_edit_task.register_events()
-        dialog_edit_task.show()
-
-        dialog_edit_task.set_on_dialog_close(() => {
-            if (!check_not_null_or_empty(dialog_edit_task.field_content.value) ||
-                !check_not_null_or_empty(dialog_edit_task.field_title.value)) return
-
-            task_to_edit.content = dialog_edit_task.field_content.value
-            task_to_edit.name = dialog_edit_task.field_title.value
-            
-
-
-            task_list.flush_to_page(TaskList.get_task_list_container())
-            task_list.save_into_local_storage()
-        })
     }
 
     get(index) {
