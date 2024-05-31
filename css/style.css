@@ -281,8 +281,7 @@ h3 {
 
 .task:hover {
     box-shadow: 0px 5px 14px #00000056;
-    scale: 1.01;
-    transform: translateY(-.2em);
+    transform: translateY(-.05em);
 }
 
 .nav-title {

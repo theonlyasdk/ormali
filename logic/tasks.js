@@ -64,6 +64,12 @@ class Task {
                                 title="Mark as done">
                             <i class="bi ${btn_done_icon}"></i>
                         </button>
+                        <button class="btn ${btn_done_color} 
+                                task-btn-done" 
+                                onclick="task_list.copy_content('${this.id}')"
+                                title="Copy content">
+                            <i class="bi bi-clipboard-fill"></i>
+                        </button>
                         <button class="btn btn-primary" 
                                 onclick="dialog_new_task.show('${this.id}')"
                                 title="Edit task">
@@ -89,6 +95,13 @@ class TaskList {
     constructor() {
         this.tasks = []
         this.no_tasks_message = document.getElementById("no-tasks")
+    }
+
+    copy_content(id) {
+        const task = this.tasks.find(task => task.id === id)
+        if (task) {
+            navigator.clipboard.writeText(task.content)
+        }
     }
 
     clear() {
