@@ -91,6 +91,12 @@ class TaskList {
         this.no_tasks_message = document.getElementById("no-tasks")
     }
 
+    clear() {
+        this.tasks = []
+        TaskList.get_task_list_container().innerHTML = ""
+        this.toggle_visibility_of_no_tasks_placeholder()
+    }
+
     toggle_visibility_of_no_tasks_placeholder() {
         this.no_tasks_message.style.display = this.tasks.length <= 0 ? "flex" : "none"
     }

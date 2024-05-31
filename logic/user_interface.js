@@ -93,7 +93,7 @@ class NewTaskDialog {
         const task_to_edit = task_list.tasks.find(task => task.id == task_id);
         this.field_title.value = task_to_edit.name;
         this.field_content.value = task_to_edit.content;
-        this.dialog_heading.innerText = 'Edit existing task...';
+        this.dialog_heading.innerText = 'Edit task...';
     }
 
     close() {

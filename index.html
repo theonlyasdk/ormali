@@ -68,9 +68,21 @@
                             aria-label="Search">
                         <button class="btn btn-outline-success btn-search" type="submit"><i class="bi bi-search"></i></button>
                     </form>
+
                     <div class="dropdown dropdown-end d-flex justify-content-between justify-content-lg-end">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                            aria-expanded="false" title="Task actions">
+                            <i class="bi bi-card-list"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="task_list.clear()"><i
+                                        class="bi bi-file-earmark-fill"></i>&nbsp;Clear tasks</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown dropdown-end d-flex justify-content-between justify-content-lg-end">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" title="Configure">
                             <i class="bi bi-gear-fill"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-end">
@@ -141,9 +153,7 @@
 
         </div>
     </div>
-    <div class="footer">
-        <!-- Maybe something will get added here in the future -->
-    </div>
+
     <div class="floating-menu">
         <button class="floating-btn" id="btn-trigger-new-task-dialog">New <i class="bi bi-plus"></i></button>
     </div>
