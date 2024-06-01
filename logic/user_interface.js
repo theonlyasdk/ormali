@@ -86,15 +86,15 @@ class InputDialog {
 class NewTaskDialog {
     constructor(default_title = "") {
         this.default_title = default_title
-        this.dialog_container = document.getElementById("container-dialog-new-task")
         this.dialog = document.getElementById("dialog-new-task")
+        this.dialog_container = document.getElementById("container-dialog-new-task")
         this.dialog_heading = document.getElementById("dialog-heading")
+        this.dialog_dim_overlay = document.getElementById("dialog-dim-overlay")
+        this.dialog_new_task_form = document.getElementById("dialog-new-task-form")
         this.btn_confirm = document.getElementById("dialog-new-task-btn-confirm")
         this.btn_close = document.getElementById("dialog-new-task-btn-close")
         this.btn_open_dialog = document.getElementById("btn-trigger-new-task-dialog")
         this.btn_generate_tasks = document.getElementById("dialog-new-task-btn-generate-tasks")
-        this.dialog_dim_overlay = document.getElementById("dialog-dim-overlay")
-        this.dialog_new_task_form = document.getElementById("dialog-new-task-form")
         this.field_title = document.getElementById("dialog-new-task-title")
         this.field_content = document.getElementById("dialog-new-task-content")
         this.text_btn_generate_tasks = document.getElementById("btn-generate-tasks-text")
@@ -104,9 +104,8 @@ class NewTaskDialog {
         this.alert_warning.style.display = "none"
         this.checklist_container = document.getElementById("dialog-new-task-checklist-container")
         this.checklist_container_loading = document.getElementById("dialog-new-task-content-generating")
-
-        this.checklist_container.style.display = 'none'
         this.checklist_container.innerHTML = ''
+        this.checklist_container.style.display = 'none'
         this.checklist = {}
     }
 
@@ -121,7 +120,9 @@ class NewTaskDialog {
     new_task_dialog() {
         this.dialog.removeAttribute('data-id');
         this.field_content.value = ""
+        this.field_content.style.display = "block"
         this.field_title.value = ""
+        this.checklist_container.innerHTML = ""
         this.dialog_heading.innerText = 'Add new task...';
     }
 
@@ -212,7 +213,8 @@ class NewTaskDialog {
         this.hide_error()
         this.hide_warning()
 
-        const safety_settings = [{
+        const safety_settings = [
+            {
                 category: gen_ai.HarmCategory.HARM_CATEGORY_HARASSMENT,
                 threshold: gen_ai.HarmBlockThreshold.BLOCK_ONLY_HIGH,
             },
@@ -242,7 +244,7 @@ class NewTaskDialog {
         try {
             const checklist_container_alert = new AlertMessage("", "Checklists will be editable once you create the task", "info");
 
-            this.checklist_container.innerHTML = ''
+            this.checklist_container.innerHTML = ""
             this.checklist_container.innerHTML += checklist_container_alert.build_html()
             this.checklist_container.style.display = 'none'
             this.checklist_container_loading.style.display = 'flex'
