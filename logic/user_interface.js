@@ -2,6 +2,37 @@
  * This file contains the logic for user interface related functionality
  */
 
+class AlertMessage {
+    constructor(title, message, type) {
+        this.title = title
+        this.message = message
+        this.type = type
+    }
+
+    get_icon() {
+        switch (this.type) {
+            case "primary": 
+            case "secondary":
+            case "success":
+            case "info":
+                return "info-circle-fill";
+            case "warning":
+                return "exclamation-triangle-fill";
+            case "danger":
+                return "exclamation-octagon-fill";
+            default: return "info-circle-fill"
+        }
+    }
+
+    build_html() {
+        return `
+            <div class="alert alert-${this.type}" role="alert">
+              <i class="bi bi-${this.get_icon()}"></i>&nbsp;<b>${this.title ? this.title + ":" : ""}</b>&nbsp;${this.message}
+            </div>
+        `
+    }
+}
+
 // TODO: Move all dialog related functions into a base class and
 //       inherit all dialog related classes from it
 class InputDialog {
@@ -74,6 +105,7 @@ class NewTaskDialog {
         this.checklist_container = document.getElementById("dialog-new-task-checklist-container")
         this.checklist_container_loading = document.getElementById("dialog-new-task-content-generating")
 
+        this.checklist_container.style.display = 'none'
         this.checklist_container.innerHTML = ''
         this.checklist = {}
     }
@@ -143,8 +175,8 @@ class NewTaskDialog {
     }
 
     show_error(error) {
-        this.alert_error.style.display = "block"
-        this.alert_error.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i>&nbsp&nbsp${error}`
+        this.alert_error.style.display = "flex"
+        this.alert_error.innerHTML = `<i class="bi bi-exclamation-circle-fill"></i><span class="dialog-new-task-error">${error}</span>`
     }
 
     hide_error() {
@@ -152,9 +184,9 @@ class NewTaskDialog {
         this.alert_error.innerHTML = ""
     }
 
-    show_warning(error) {
-        this.alert_warning.style.display = "block"
-        this.alert_warning.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i>&nbsp&nbsp${error}`
+    show_warning(warning) {
+        this.alert_warning.style.display = "flex"
+        this.alert_warning.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i><span class="dialog-new-task-warning">${warning}</span>`
 
         setTimeout(() => this.hide_warning(), 4000)
     }
@@ -167,10 +199,11 @@ class NewTaskDialog {
     set_on_dialog_close = (event) => { this.on_dialog_close = event }
 
     async handle_generate_content() {
-        if (!window.gen_ai) {
+        if (typeof gen_ai === undefined) {
             this.show_error("Gemini API failed to initialize. Reload this page and and try again.")
             return
         }
+
         if (this.field_title.value == "") {
             this.show_warning("Enter a title to generate tasks.")
             return
@@ -179,8 +212,19 @@ class NewTaskDialog {
         this.hide_error()
         this.hide_warning()
 
+        const safety_settings = [{
+                category: gen_ai.HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: gen_ai.HarmBlockThreshold.BLOCK_ONLY_HIGH,
+            },
+            {
+                category: gen_ai.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: gen_ai.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            }
+        ]
+
+
         // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
-        const model = window.gen_ai.getGenerativeModel({ model: "gemini-1.5-flash" })
+        const model = gen_ai.getGenerativeModel({ model: "gemini-1.5-flash", safety_settings })
 
         // If the content generation shows something irrelevant, tell it not to by adding to the lines below
         const prompt_rules = `
@@ -196,7 +240,11 @@ class NewTaskDialog {
         const prompt = `Create content for a todo task based on the following title: '${this.field_title.value}'. ${prompt_rules}`
 
         try {
+            const checklist_container_alert = new AlertMessage("", "Checklists will be editable once you create the task", "info");
+
             this.checklist_container.innerHTML = ''
+            this.checklist_container.innerHTML += checklist_container_alert.build_html()
+            this.checklist_container.style.display = 'none'
             this.checklist_container_loading.style.display = 'flex'
             this.field_content.style.display = 'none'
             this.field_content.value = ""
@@ -207,41 +255,49 @@ class NewTaskDialog {
 
             const lines = text.split("\n")
 
+            // Create new checkbox for each numbered line in result
             lines.forEach(line => {
                 const match = line.match(/^(\d+)\.\s+(.*)$/)
                 if (match) {
-                    const number = parseInt(match[1])
-                    const value = match[2]
-                    this.checklist[number] = value
-                    const checkbox = document.createElement("div")
-                    checkbox.classList.add("form-check")
-                    const input = document.createElement("input")
-                    input.type = "checkbox"
-                    input.classList.add("form-check-input")
-                    input.id = `dialog-new-task-checklist-${number}`
-                    input.value = value
-                    const label = document.createElement("label")
-                    label.classList.add("form-check-label")
-                    label.htmlFor = `dialog-new-task-checklist-${number}`
-                    label.innerHTML = value
-                    checkbox.appendChild(input)
-                    checkbox.appendChild(label)
-                    this.checklist_container.appendChild(checkbox)
+                    const id = parseInt(match[1])
+                    const content = match[2]
+
+                    const checklist_html = `
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="dialog-new-task-checklist-${id}" value="${content}" disabled />
+                            <label class="form-check-label" for="dialog-new-task-checklist-${id}">${content}</label>
+                        </div>
+                    `
+
+                    this.checklist_container.innerHTML += checklist_html
+                    this.checklist[id] = {
+                        "content": content,
+                        "checked": false
+                    }
                 }
             })
 
             this.checklist_container_loading.style.display = 'none'
 
-            if (checklist.length > 0) {
+            // _ is from Underscore.js (its a utility library)
+            if (_.size(this.checklist) > 0) {
+                this.checklist_container.style.display = 'flex'
                 this.field_content.style.display = 'none'
+            } else {
+                this.field_content.value = text
+                this.field_content.scrollTop = this.field_content.scrollHeight
             }
 
-            this.field_content.value = text
-            this.field_content.scrollTop = this.field_content.scrollHeight
-
         } catch (error) {
-            if (error.toString().includes("API key not valid. Please pass a valid API key.")) {
-                this.show_error("Invalid Gemini API key. Please set it in the settings!")
+            console.error("Error generating content:", error);
+
+            if (error.toString().includes("API key not valid")) {
+                this.show_error("Invalid Gemini API key. Please set it in the settings!");
+            } else {
+                this.show_error(`
+                    Unexpected error while trying to generate content: <br><code>${error}</code><br>
+                    Please report this problem by opening a <a href="https://github.com/theonlyasdk/ormali/issues/new">GitHub issue</a>!
+                `);
             }
         }
     }
@@ -298,7 +354,7 @@ dialog_new_task.set_on_dialog_close(() => {
         task_to_edit.content = dialog_new_task.field_content.value
 
     } else {
-        task_list.add(new Task(dialog_new_task.field_title.value,
+        task_list.add(new Task(generate_uuid(), dialog_new_task.field_title.value,
             dialog_new_task.field_content.value,
             new Date().toISOString().split('T')[0],
             false,

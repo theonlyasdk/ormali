@@ -19,32 +19,34 @@ const generate_uuid = () => {
         );
 }
 
+const check_state = (value) => value ? "checked" : ""
+
 class Task {
-    constructor(name, content, date, done, checklist) {
+    constructor(id, name, content, date, done, checklist) {
+        this.id = id
         this.name = name
         this.content = content
         this.date = date
         this.done = done
-        this.id = generate_uuid()
         this.checklist = checklist
     }
 
     from_json(json) {
+        this.id = json['id']
         this.name = json['name']
         this.content = json['content']
         this.date = json['date']
-        this.done = json['done'] !== undefined ? json['done'] : false
-        this.id = json['id']
+        this.done = json['done']
         this.checklist = json['checklist']
     }
 
     as_object() {
         return {
+            id: this.id,
             name: this.name,
             content: this.content,
             date: this.date,
             done: this.done,
-            id: this.id,
             checklist: this.checklist,
         }
     }
@@ -59,43 +61,44 @@ class Task {
                     <div class="card-text-content mb-2"> 
                         <h5 class="card-title display-6"><b>${this.name}</b></h5>
                         <p class="card-text">${this.content}</p>
-                        <small class="task-date"><i>${this.date}</i></small>
                     </div>
                     <div class="mb-2">
-                    ${Object.entries(this.checklist).map(([number, value]) => `
+                    ${Object.entries(this.checklist).map(([id, item]) => `
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checklist-${this.id}-${number}">
-                            <label class="form-check-label" for="checklist-${this.id}-${number}">
-                                ${number}. ${value}
+                            <input class="form-check-input" type="checkbox" ${check_state(item.checked)} value="" id="checklist-${this.id}-${id}" onclick="task_list.toggle_check_state('${id}', '${this.id}')">
+                            <label class="form-check-label" for="checklist-${this.id}-${id}">
+                                ${id}. ${item.content}
                             </label>
                         </div>
                     `).join('')}
                     </div>
-                    <div class="card-btn-container">
-                        <button class="btn ${btn_done_color} 
-                                task-btn-done" 
-                                onclick="task_list.mark_done('${this.id}')"
-                                title="Mark as done">
-                            <i class="bi ${btn_done_icon}"></i>
-                        </button>
-                        <button class="btn ${btn_done_color} 
-                                task-btn-done" 
-                                onclick="task_list.copy_content('${this.id}')"
-                                title="Copy content">
-                            <i class="bi bi-clipboard-fill"></i>
-                        </button>
-                        <button class="btn btn-primary" 
-                                onclick="dialog_new_task.show('${this.id}')"
-                                title="Edit task">
-                            <i class="bi bi-pencil-fill"></i>
-                        </button>
-                        <button class="btn btn-danger task-btn-delete" 
-                                onclick="task_list.remove('${this.id}')"
-                                title="Delete task">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
+                    <div class="card-bottom">
+                        <small class="task-date"><i>Created on ${this.date}</i></small>
+                        <div class="card-btn-container">
+                            <button class="btn ${btn_done_color} 
+                                    task-btn-done" 
+                                    onclick="task_list.mark_done('${this.id}')"
+                                    title="Mark as done">
+                                <i class="bi ${btn_done_icon}"></i>
+                            </button>
+                            <button class="btn ${btn_done_color} 
+                                    task-btn-done" 
+                                    onclick="task_list.copy_content('${this.id}')"
+                                    title="Copy content">
+                                <i class="bi bi-clipboard-fill"></i>
+                            </button>
+                            <button class="btn btn-primary" 
+                                    onclick="dialog_new_task.show('${this.id}')"
+                                    title="Edit task">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <button class="btn btn-danger task-btn-delete" 
+                                    onclick="task_list.remove('${this.id}')"
+                                    title="Delete task">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
                     </div>
-
                 </div>
             </div>
         `
@@ -110,6 +113,32 @@ class TaskList {
     constructor() {
         this.tasks = []
         this.no_tasks_message = document.getElementById("no-tasks")
+    }
+
+    set_check_state(check_id, task_id, state) {
+        const task = this.tasks.filter(task => task.id === task_id)[0]
+        const checkbox = task.checklist[check_id]
+
+        if (checkbox) {
+            checkbox.checked = state
+        }
+
+        this.save_into_local_storage()
+    }
+
+    get_check_state(check_id, task_id) {
+        const task = this.tasks.filter(task => task.id === task_id)[0]
+        const checkbox = task.checklist[check_id]
+
+        if (checkbox) {
+            return checkbox.checked
+        }
+
+        return false
+    }
+
+    toggle_check_state(check_id, task_id) {
+        this.set_check_state(check_id, task_id, !this.get_check_state(check_id, task_id))
     }
 
     copy_content(id) {
@@ -168,6 +197,7 @@ class TaskList {
 
         this.save_into_local_storage()
     }
+
     build_html() {
         let html = ""
 
@@ -221,4 +251,3 @@ class TaskList {
         allTasks.forEach(task => task.classList.remove('d-none'))
     }
 }
-
