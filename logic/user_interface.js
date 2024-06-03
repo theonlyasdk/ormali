@@ -122,6 +122,7 @@ class NewTaskDialog {
         this.field_content.value = ""
         this.field_content.style.display = "block"
         this.field_title.value = ""
+        this.checklist = []
         this.checklist_container.innerHTML = ""
         this.dialog_heading.innerText = 'Add new task...';
     }
