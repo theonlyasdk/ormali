@@ -75,24 +75,24 @@ class Task {
                     <div class="card-bottom">
                         <small class="task-date"><i>Created on ${this.date}</i></small>
                         <div class="card-btn-container">
-                            <button class="btn ${btn_done_color} 
+                            <button class="btn task-btn ${btn_done_color} 
                                     task-btn-done" 
                                     onclick="task_list.mark_done('${this.id}')"
                                     title="Mark as done">
                                 <i class="bi ${btn_done_icon}"></i>
                             </button>
-                            <button class="btn ${btn_done_color} 
-                                    task-btn-done" 
+                            <button class="btn task-btn ${btn_done_color} 
+                                    task-btn-copy" 
                                     onclick="task_list.copy_content('${this.id}')"
                                     title="Copy content">
                                 <i class="bi bi-clipboard-fill"></i>
                             </button>
-                            <button class="btn btn-primary" 
+                            <button class="btn task-btn btn-primary" 
                                     onclick="dialog_new_task.show('${this.id}')"
                                     title="Edit task">
                                 <i class="bi bi-pencil-fill"></i>
                             </button>
-                            <button class="btn btn-danger task-btn-delete" 
+                            <button class="btn task-btn btn-danger task-btn-delete" 
                                     onclick="task_list.remove('${this.id}')"
                                     title="Delete task">
                                 <i class="bi bi-trash-fill"></i>
