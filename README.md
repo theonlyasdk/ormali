@@ -1,5 +1,5 @@
 # Ormali
-Tasks/TODO management app made for the web with a bit of Bootstrap 5 tech. Go to https://theonlyasdk.github.io/ormali to check it out!
+Tasks/TODO management app made for the web with a bit of Bootstrap 5 tech. Visit https://theonlyasdk.github.io/ormali to check it out!
 
 ## Features
 - Your normal todo app.
