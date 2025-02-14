@@ -22,6 +22,13 @@ This repo might be a good starting point for new users :) When making a pull req
                     <sub><b>theonlyasdk</b></sub>
                 </a>
             </td>
+            <td align="center">
+                <a href="https://github.com/Benewaza">
+                    <img src="https://avatars.githubusercontent.com/u/25137016?v=4" width="100;" alt="Benewaza"/>
+                    <br />
+                    <sub><b>Ben</b></sub>
+                </a>
+            </td>
 		</tr>
 	<tbody>
 </table>
